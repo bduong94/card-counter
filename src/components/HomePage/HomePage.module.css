@@ -9,3 +9,8 @@
 .upload-button {
   margin-bottom: 10px;
 }
+
+.spinner-border {
+  display: flex;
+  justify-content: center;
+}

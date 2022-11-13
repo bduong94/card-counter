@@ -3,7 +3,10 @@ import classes from "./CardDisplay.module.css";
 
 export default function HomePageInput({ cardTag, cardData }) {
   const className = `card-field`;
-  const owner = cardTag[0].toUpperCase() + cardTag.slice(1, -2);
+  const owner =
+    cardTag === "1t"
+      ? "Brian"
+      : cardTag[0].toUpperCase() + cardTag.slice(1, -2);
   let cardCodes = "";
   const cardCount = cardData.length;
 

@@ -2,13 +2,22 @@ import React, { useState, useEffect } from "react";
 import HomePageInput from "./CardDisplay";
 import classes from "./HomePage.module.css";
 import { CardCodesUploader } from "./CardCodesUploader";
-import readXlsxFile from "read-excel-file";
+import {
+  excelFileReader,
+  searchColumnIndex,
+  filterCards,
+} from "../../hooks/excelReader.js";
 
 export function HomePage() {
   const [fileOne, setFileOne] = useState();
   const [fileTwo, setFileTwo] = useState();
+  const [filesLoading, setFilesLoading] = useState();
+  const [filesUploaded, setFilesUploaded] = useState();
+  const [filteredCardsOne, setFilteredCardsOne] = useState();
+  const [filteredCardsTwo, setFilteredCardsTwo] = useState();
 
   const cardsTags = [
+    "1t",
     "spare1t",
     "dana1t",
     "jacky1t",
@@ -64,20 +73,26 @@ export function HomePage() {
     );
   });
 
-  async function excelFileReader(file) {
-    let fileContent;
-    await readXlsxFile(file).then((res) => {
-      fileContent = res;
-    });
+  const loadingDisplay = (
+    <div className="spinner-border text-dark" role="status">
+      <span className="sr-only"></span>
+    </div>
+  );
 
-    return fileContent;
-  }
+  const noCardsToDisplay = (
+    <div>
+      <p>Files have not been uploaded yet</p>
+    </div>
+  );
 
   async function fileUploadHandler() {
     const acceptableFileTypes = [
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     ];
+
     let filesAcceptable;
+
+    setFilesLoading(false);
 
     if (!fileOne) {
       return console.log("A file is missing");
@@ -97,11 +112,42 @@ export function HomePage() {
       return console.log("File format is not accepted.");
     }
 
+    setFilesLoading(true);
+
     const excelContentFileOne = await excelFileReader(fileOne);
     const excelContentFileTwo = await excelFileReader(fileTwo);
 
-    console.log(excelContentFileOne);
-    console.log(excelContentFileTwo);
+    setFilesLoading(false);
+
+    const fileOneColumnIndexes = {
+      code: searchColumnIndex(excelContentFileOne[0], "code"),
+      tag: searchColumnIndex(excelContentFileOne[0], "tag"),
+      wishlists: searchColumnIndex(excelContentFileOne[0], "wishlists"),
+    };
+
+    const fileTwoColumnIndexes = {
+      code: searchColumnIndex(excelContentFileTwo[0], "code"),
+      tag: searchColumnIndex(excelContentFileTwo[0], "tag"),
+      wishlists: searchColumnIndex(excelContentFileTwo[0], "wishlists"),
+    };
+
+    const fileOneFilteredCards = filterCards(
+      excelContentFileOne,
+      cardsTags,
+      fileOneColumnIndexes
+    );
+
+    const fileTwoFilteredCards = filterCards(
+      excelContentFileTwo,
+      cardsTags,
+      fileTwoColumnIndexes
+    );
+
+    console.log(fileOneFilteredCards);
+
+    setFilesUploaded(true);
+    setFilteredCardsOne(fileOneFilteredCards);
+    setFilteredCardsTwo(fileTwoFilteredCards);
   }
 
   function fileUploaderOneHandler(e) {
@@ -126,16 +172,6 @@ export function HomePage() {
           name="this"
           fileUploadHandler={fileUploaderTwoHandler}
         />
-        {/* <input
-          type="file"
-          class="form-control"
-          onChange={fileUploaderOneHandler}
-        />
-        <input
-          type="file"
-          class="form-control"
-          onChange={fileUploaderTwoHandler}
-        /> */}
         <div className={classes["upload-button"]}>
           <button
             type="button"
@@ -146,7 +182,11 @@ export function HomePage() {
           </button>
         </div>
       </div>
-      {cardDisplay}
+      {filesLoading
+        ? loadingDisplay
+        : filesUploaded
+        ? cardDisplay
+        : noCardsToDisplay}
     </div>
   );
 }
