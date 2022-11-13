@@ -66,12 +66,27 @@ export function HomePage() {
     },
   ];
 
-  const cardDisplay = cardsTags.map((tag) => {
-    const cardsOwned = DUMMY_DATA.filter((card) => card.tag === tag);
-    return (
-      <HomePageInput key={tag} id={tag} cardTag={tag} cardData={cardsOwned} />
-    );
-  });
+  const cardDisplay =
+    filteredCardsOne && filteredCardsTwo
+      ? cardsTags.map((tag) => {
+          const cardsOwnedPreviousWeek = filteredCardsOne.filter(
+            (card) => card.tag === tag
+          );
+          const cardsOwnedThisWeek = filteredCardsTwo.filter(
+            (card) => card.tag === tag
+          );
+
+          return (
+            <HomePageInput
+              key={tag}
+              id={tag}
+              cardTag={tag}
+              cardDataPreviousWeek={cardsOwnedPreviousWeek}
+              cardDataThisWeek={cardsOwnedThisWeek}
+            />
+          );
+        })
+      : null;
 
   const loadingDisplay = (
     <div className="spinner-border text-dark" role="status">
@@ -142,8 +157,6 @@ export function HomePage() {
       cardsTags,
       fileTwoColumnIndexes
     );
-
-    console.log(fileOneFilteredCards);
 
     setFilesUploaded(true);
     setFilteredCardsOne(fileOneFilteredCards);
