@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import HomePageInput from "./CardDisplay";
 import classes from "./HomePage.module.css";
+import { CardCodesUploader } from "./CardCodesUploader";
+import readXlsxFile from "read-excel-file";
 
 export function HomePage() {
+  const [fileOne, setFileOne] = useState();
+  const [fileTwo, setFileTwo] = useState();
+
   const cardsTags = [
+    "spare1t",
     "dana1t",
     "jacky1t",
     "pepega1t",
@@ -53,29 +59,91 @@ export function HomePage() {
 
   const cardDisplay = cardsTags.map((tag) => {
     const cardsOwned = DUMMY_DATA.filter((card) => card.tag === tag);
-
-    return <HomePageInput id={tag} cardTag={tag} cardData={cardsOwned} />;
+    return (
+      <HomePageInput key={tag} id={tag} cardTag={tag} cardData={cardsOwned} />
+    );
   });
+
+  async function excelFileReader(file) {
+    let fileContent;
+    await readXlsxFile(file).then((res) => {
+      fileContent = res;
+    });
+
+    return fileContent;
+  }
+
+  async function fileUploadHandler() {
+    const acceptableFileTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
+    let filesAcceptable;
+
+    if (!fileOne) {
+      return console.log("A file is missing");
+    }
+
+    if (!fileTwo) {
+      return console.log("A file is missing");
+    }
+
+    if (fileOne && fileTwo) {
+      filesAcceptable =
+        acceptableFileTypes.includes(fileOne.type) &&
+        acceptableFileTypes.includes(fileTwo.type);
+    }
+
+    if (!filesAcceptable) {
+      return console.log("File format is not accepted.");
+    }
+
+    const excelContentFileOne = await excelFileReader(fileOne);
+    const excelContentFileTwo = await excelFileReader(fileTwo);
+
+    console.log(excelContentFileOne);
+    console.log(excelContentFileTwo);
+  }
+
+  function fileUploaderOneHandler(e) {
+    const file = e.target.files[0];
+    setFileOne(file);
+  }
+
+  function fileUploaderTwoHandler(e) {
+    const file = e.target.files[0];
+    setFileTwo(file);
+  }
 
   return (
     <div className={classes["home-page"]}>
       <div className={classes["main-cards"]}>
-        <p>Enter all 1 ticket cards here:</p>
-        <div class="input-group mb-3">
+        <p>Upload your files here (Acceptable Formats: .xlsx) : </p>
+        <CardCodesUploader
+          name="previous"
+          fileUploadHandler={fileUploaderOneHandler}
+        />
+        <CardCodesUploader
+          name="this"
+          fileUploadHandler={fileUploaderTwoHandler}
+        />
+        {/* <input
+          type="file"
+          class="form-control"
+          onChange={fileUploaderOneHandler}
+        />
+        <input
+          type="file"
+          class="form-control"
+          onChange={fileUploaderTwoHandler}
+        /> */}
+        <div className={classes["upload-button"]}>
           <button
-            class="btn btn-light btn-outline-secondary"
             type="button"
-            id="button-addon1"
+            className="btn btn-light"
+            onClick={fileUploadHandler}
           >
             Upload
           </button>
-          <input
-            type="file"
-            class="form-control"
-            // placeholder=""
-            // aria-label="Example text with button addon"
-            // aria-describedby="button-addon1"
-          />
         </div>
       </div>
       {cardDisplay}

@@ -7,10 +7,20 @@ export default function HomePageInput({ cardTag, cardData }) {
   let cardCodes = "";
   const cardCount = cardData.length;
 
+  for (const card of cardData) {
+    cardCodes += card.code + " ";
+  }
+
+  const allCardCodes =
+    cardCount > 0
+      ? `All card codes: ${cardCodes.trim()}`
+      : `No cards from user`;
+
   return (
     <div className={classes[className]}>
-      <p>Cards from: {owner}</p>
+      <p>Cards from {owner}</p>
       <p>Total cards: {cardCount}</p>
+      <p>{allCardCodes}</p>
       {/* <p>Enter your cards:</p>
       <div class="input-group mb-3">
         <button
