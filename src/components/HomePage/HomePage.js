@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageInput from "./CardDisplay";
+import AllCards from "./AllCards.js";
 import classes from "./HomePage.module.css";
 import { CardCodesUploader } from "./CardCodesUploader";
 import {
@@ -27,45 +28,6 @@ export function HomePage() {
     "souta1t",
   ];
 
-  const DUMMY_DATA = [
-    {
-      tag: "dana1t",
-      code: "test1",
-    },
-    {
-      tag: "pepega1t",
-      code: "test2",
-    },
-    {
-      tag: "dana1t",
-      code: "test3",
-    },
-    {
-      tag: "dana1t",
-      code: "test4",
-    },
-    {
-      tag: "pepega1t",
-      code: "test5",
-    },
-    {
-      tag: "jacky1t",
-      code: "test6",
-    },
-    {
-      tag: "jacky1t",
-      code: "test7",
-    },
-    {
-      tag: "souta1t",
-      code: "test8",
-    },
-    {
-      tag: "souta1t",
-      code: "test9",
-    },
-  ];
-
   const cardDisplay =
     filteredCardsOne && filteredCardsTwo
       ? cardsTags.map((tag) => {
@@ -75,6 +37,8 @@ export function HomePage() {
           const cardsOwnedThisWeek = filteredCardsTwo.filter(
             (card) => card.tag === tag
           );
+
+          console.log(tag);
 
           return (
             <HomePageInput
@@ -195,6 +159,7 @@ export function HomePage() {
           </button>
         </div>
       </div>
+      {filesUploaded ? <AllCards allCardData={filteredCardsTwo} /> : null}
       {filesLoading
         ? loadingDisplay
         : filesUploaded
