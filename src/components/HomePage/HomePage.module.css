@@ -10,7 +10,8 @@
   margin-bottom: 10px;
 }
 
-.spinner-border {
+.loading-icon {
   display: flex;
   justify-content: center;
+  margin: 3em;
 }

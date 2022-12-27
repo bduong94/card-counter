@@ -3,7 +3,7 @@
   border-bottom: solid #8098bf 1px;
 }
 
-.card-codes {
+.card-codes-hidden {
   display: flex;
   align-items: center;
 }

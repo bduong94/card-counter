@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import HomePageInput from "./CardDisplay";
 import AllCards from "./AllCards.js";
 import classes from "./HomePage.module.css";
@@ -12,10 +12,10 @@ import {
 export function HomePage() {
   const [fileOne, setFileOne] = useState();
   const [fileTwo, setFileTwo] = useState();
-  const [filesLoading, setFilesLoading] = useState();
-  const [filesUploaded, setFilesUploaded] = useState();
-  const [filteredCardsOne, setFilteredCardsOne] = useState();
-  const [filteredCardsTwo, setFilteredCardsTwo] = useState();
+  const [filesLoading, setFilesLoading] = useState(false);
+  const [filesUploaded, setFilesUploaded] = useState(false);
+  const [filteredCardsOne, setFilteredCardsOne] = useState([]);
+  const [filteredCardsTwo, setFilteredCardsTwo] = useState([]);
 
   const cardsTags = [
     "1t",
@@ -37,9 +37,6 @@ export function HomePage() {
           const cardsOwnedThisWeek = filteredCardsTwo.filter(
             (card) => card.tag === tag
           );
-
-          console.log(tag);
-
           return (
             <HomePageInput
               key={tag}
@@ -53,8 +50,10 @@ export function HomePage() {
       : null;
 
   const loadingDisplay = (
-    <div className="spinner-border text-dark" role="status">
-      <span className="sr-only"></span>
+    <div className={`${classes["loading-icon"]}`}>
+      <div className="spinner-border text-dark" role="status">
+        <span className="sr-only"></span>
+      </div>
     </div>
   );
 
@@ -159,12 +158,18 @@ export function HomePage() {
           </button>
         </div>
       </div>
-      {filesUploaded ? <AllCards allCardData={filteredCardsTwo} /> : null}
-      {filesLoading
-        ? loadingDisplay
-        : filesUploaded
-        ? cardDisplay
-        : noCardsToDisplay}
+      <div className={classes["card-container"]}>
+        {filesLoading ? (
+          loadingDisplay
+        ) : filesUploaded ? (
+          <>
+            <AllCards allCardData={filteredCardsTwo} />
+            {cardDisplay}
+          </>
+        ) : (
+          noCardsToDisplay
+        )}
+      </div>
     </div>
   );
 }

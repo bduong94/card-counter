@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import classes from "./ToggleButton.module.css";
 
-export default function ToggleButton({ codes }) {
+export default function ToggleButton({ codes, toggleAppearance }) {
   const [toggleOn, setToggleOn] = useState(false);
 
   const toggleHandler = () => {
     setToggleOn((previous) => !previous);
+
+    if (toggleAppearance) {
+      toggleAppearance((prev) => !prev);
+    }
   };
 
   return (
