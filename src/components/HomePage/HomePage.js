@@ -26,6 +26,7 @@ export function HomePage() {
     "saka1t",
     "server1t",
     "souta1t",
+    "eti1t"
   ];
 
   const cardDisplay =
