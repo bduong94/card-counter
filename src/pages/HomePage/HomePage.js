@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import HomePageInput from "./CardDisplay";
-import AllCards from "./AllCards.js";
+import HomePageInput from "../../components/HomePage/CardDisplay";
+import AllCards from "../../components/HomePage/AllCards.js";
 import classes from "./HomePage.module.css";
-import { CardCodesUploader } from "./CardCodesUploader";
+import { CardCodesUploader } from "../../components/HomePage/CardCodesUploader";
+import { Button } from "@mui/material";
 import {
   excelFileReader,
   searchColumnIndex,
@@ -26,7 +27,7 @@ export function HomePage() {
     "saka1t",
     "server1t",
     "souta1t",
-    "eti1t"
+    "eti1t",
   ];
 
   const cardDisplay =
@@ -150,13 +151,16 @@ export function HomePage() {
           fileUploadHandler={fileUploaderTwoHandler}
         />
         <div className={classes["upload-button"]}>
-          <button
+          {/* <button
             type="button"
             className="btn btn-light"
             onClick={fileUploadHandler}
           >
             Upload
-          </button>
+          </button> */}
+          <Button variant="contained" onClick={fileUploadHandler}>
+            Upload
+          </Button>
         </div>
       </div>
       <div className={classes["card-container"]}>
