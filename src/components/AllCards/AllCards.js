@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import classes from "./AllCards.module.css";
-import ToggleButton from "./ToggleButton";
+import ToggleButton from "../ToggleButton/ToggleButton";
 
 export default function AllCards({ allCardData }) {
   const [cardsExpanded, setCardsExpanded] = useState(false);

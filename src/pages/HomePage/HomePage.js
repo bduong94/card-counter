@@ -1,61 +1,24 @@
-import React, { useEffect, useState } from "react";
-import HomePageInput from "../../components/HomePage/CardDisplay";
-import AllCards from "../../components/HomePage/AllCards.js";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../utils";
+import { useDispatch } from "react-redux";
 import { downloadCards } from "../../store/slice/CardSlice";
 import classes from "./HomePage.module.css";
-import { CardCodesUploader } from "../../components/HomePage/CardCodesUploader";
+import CardCodesUploader from "../../components/CardCodesUploader/CardCodesUploader";
 import { Button } from "@mui/material";
 import { excelFileReader } from "../../hooks/excelReader.js";
-
 export function HomePage() {
   const [fileOne, setFileOne] = useState();
   const [fileTwo, setFileTwo] = useState();
   const [filesLoading, setFilesLoading] = useState(false);
-  const [filesUploaded, setFilesUploaded] = useState(false);
-  const { filteredCardsOne, filteredCardsTwo, cardsTags } = useSelector(
-    (state) => state.cards
-  );
   const dispatch = useDispatch();
-
-  const cardDisplay =
-    filteredCardsOne && filteredCardsTwo
-      ? cardsTags.map((tag) => {
-          const cardsOwnedPreviousWeek = filteredCardsOne.filter(
-            (card) => card.tag === tag
-          );
-          const cardsOwnedThisWeek = filteredCardsTwo.filter(
-            (card) => card.tag === tag
-          );
-          return (
-            <HomePageInput
-              key={tag}
-              id={tag}
-              cardTag={tag}
-              cardDataPreviousWeek={cardsOwnedPreviousWeek}
-              cardDataThisWeek={cardsOwnedThisWeek}
-            />
-          );
-        })
-      : null;
-
-  useEffect(() => {
-    if (filteredCardsOne.length > 0 && filteredCardsTwo.length > 0) {
-      setFilesUploaded(true);
-    }
-  }, [filteredCardsOne, filteredCardsTwo, filesUploaded]);
+  const navigate = useNavigate();
 
   const loadingDisplay = (
     <div className={`${classes["loading-icon"]}`}>
       <div className="spinner-border text-dark" role="status">
         <span className="sr-only"></span>
       </div>
-    </div>
-  );
-
-  const noCardsToDisplay = (
-    <div>
-      <p>Files have not been uploaded yet</p>
     </div>
   );
 
@@ -94,6 +57,7 @@ export function HomePage() {
     setFilesLoading(false);
 
     dispatch(downloadCards({ excelContentFileOne, excelContentFileTwo }));
+    navigate(ROUTES.SUMMARY);
   }
 
   function fileUploaderOneHandler(e) {
@@ -125,16 +89,7 @@ export function HomePage() {
         </div>
       </div>
       <div className={classes["card-container"]}>
-        {filesLoading ? (
-          loadingDisplay
-        ) : filesUploaded ? (
-          <>
-            <AllCards allCardData={filteredCardsTwo} />
-            {cardDisplay}
-          </>
-        ) : (
-          noCardsToDisplay
-        )}
+        {filesLoading ? loadingDisplay : null}
       </div>
     </div>
   );

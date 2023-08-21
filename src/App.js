@@ -65,7 +65,7 @@ function App() {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              onClick={() => handleCloseNavMenu(ROUTES.HOME)}
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -76,7 +76,7 @@ function App() {
                 textDecoration: "none",
               }}
             >
-              Karuta Card Splitter
+              Karuta 1 Ticket Card Generator
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
@@ -126,7 +126,7 @@ function App() {
                 textDecoration: "none",
               }}
             >
-              Karuta Card Splitter
+              Karuta 1 Ticket Card Generator
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {navbarMenuItems}

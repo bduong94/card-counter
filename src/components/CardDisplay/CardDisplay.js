@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import classes from "./CardDisplay.module.css";
-import ToggleButton from "./ToggleButton";
+import ToggleButton from "../ToggleButton/ToggleButton";
 
 export default function HomePageInput({
   cardTag,

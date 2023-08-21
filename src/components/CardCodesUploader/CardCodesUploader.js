@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./CardCodesUploader.module.css";
 
-export function CardCodesUploader({ name, fileUploadHandler }) {
+export default function CardCodesUploader({ name, fileUploadHandler }) {
   return (
     <>
       <p>{name[0].toUpperCase() + name.slice(1)} week:</p>
