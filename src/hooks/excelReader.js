@@ -1,4 +1,3 @@
-import React from "react";
 import readXlsxFile from "read-excel-file";
 
 export async function excelFileReader(file) {

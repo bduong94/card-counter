@@ -1,34 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HomePageInput from "../../components/HomePage/CardDisplay";
 import AllCards from "../../components/HomePage/AllCards.js";
+import { useSelector, useDispatch } from "react-redux";
+import { downloadCards } from "../../store/slice/CardSlice";
 import classes from "./HomePage.module.css";
 import { CardCodesUploader } from "../../components/HomePage/CardCodesUploader";
 import { Button } from "@mui/material";
-import {
-  excelFileReader,
-  searchColumnIndex,
-  filterCards,
-} from "../../hooks/excelReader.js";
+import { excelFileReader } from "../../hooks/excelReader.js";
 
 export function HomePage() {
   const [fileOne, setFileOne] = useState();
   const [fileTwo, setFileTwo] = useState();
   const [filesLoading, setFilesLoading] = useState(false);
   const [filesUploaded, setFilesUploaded] = useState(false);
-  const [filteredCardsOne, setFilteredCardsOne] = useState([]);
-  const [filteredCardsTwo, setFilteredCardsTwo] = useState([]);
-
-  const cardsTags = [
-    "1t",
-    "spare1t",
-    "dana1t",
-    "jacky1t",
-    "pepega1t",
-    "saka1t",
-    "server1t",
-    "souta1t",
-    "eti1t",
-  ];
+  const { filteredCardsOne, filteredCardsTwo, cardsTags } = useSelector(
+    (state) => state.cards
+  );
+  const dispatch = useDispatch();
 
   const cardDisplay =
     filteredCardsOne && filteredCardsTwo
@@ -50,6 +38,12 @@ export function HomePage() {
           );
         })
       : null;
+
+  useEffect(() => {
+    if (filteredCardsOne.length > 0 && filteredCardsTwo.length > 0) {
+      setFilesUploaded(true);
+    }
+  }, [filteredCardsOne, filteredCardsTwo, filesUploaded]);
 
   const loadingDisplay = (
     <div className={`${classes["loading-icon"]}`}>
@@ -99,33 +93,7 @@ export function HomePage() {
 
     setFilesLoading(false);
 
-    const fileOneColumnIndexes = {
-      code: searchColumnIndex(excelContentFileOne[0], "code"),
-      tag: searchColumnIndex(excelContentFileOne[0], "tag"),
-      wishlists: searchColumnIndex(excelContentFileOne[0], "wishlists"),
-    };
-
-    const fileTwoColumnIndexes = {
-      code: searchColumnIndex(excelContentFileTwo[0], "code"),
-      tag: searchColumnIndex(excelContentFileTwo[0], "tag"),
-      wishlists: searchColumnIndex(excelContentFileTwo[0], "wishlists"),
-    };
-
-    const fileOneFilteredCards = filterCards(
-      excelContentFileOne,
-      cardsTags,
-      fileOneColumnIndexes
-    );
-
-    const fileTwoFilteredCards = filterCards(
-      excelContentFileTwo,
-      cardsTags,
-      fileTwoColumnIndexes
-    );
-
-    setFilesUploaded(true);
-    setFilteredCardsOne(fileOneFilteredCards);
-    setFilteredCardsTwo(fileTwoFilteredCards);
+    dispatch(downloadCards({ excelContentFileOne, excelContentFileTwo }));
   }
 
   function fileUploaderOneHandler(e) {
@@ -151,13 +119,6 @@ export function HomePage() {
           fileUploadHandler={fileUploaderTwoHandler}
         />
         <div className={classes["upload-button"]}>
-          {/* <button
-            type="button"
-            className="btn btn-light"
-            onClick={fileUploadHandler}
-          >
-            Upload
-          </button> */}
           <Button variant="contained" onClick={fileUploadHandler}>
             Upload
           </Button>
