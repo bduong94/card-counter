@@ -57,7 +57,7 @@ function App() {
   });
 
   return (
-    <>
+    <div>
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -74,6 +74,7 @@ function App() {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
+                cursor: "pointer"
               }}
             >
               Karuta 1 Ticket Card Generator
@@ -124,6 +125,7 @@ function App() {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
+                cursor: "pointer",
               }}
             >
               Karuta 1 Ticket Card Generator
@@ -138,7 +140,7 @@ function App() {
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/summary" element={<SummaryPage />}></Route>
       </Routes>
-    </>
+    </div>
   );
 }
 
